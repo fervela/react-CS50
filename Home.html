@@ -16,33 +16,55 @@
         <div id="app"></div>
 
         <script type="text/babel" >
-            class Hello extends React.Component{
-                        render(){
-                            return(
-                                <div>
-                                    <h1>
-                                            Omg it worked this whole time???? Hello {this.props.name}!
-                                    </h1>
-                                </div>
-                            );
-                        }
-                    }
+            
             
             class App extends React.Component{
                 render(){
                     return(
                         <div>
-                            <Hello name="Josh"/>
-                            <Hello name="Athena"/>
-                            <Hello name="Julia"/>
-                            <Hello name="Kristina"/>
-                            <Hello name="Andrew"/>
+                            <Counter/>
+                            <Counter/>
+                            <Counter/>
+                            <Counter/>
+                            
 
                         </div>
                     );
                 }
             }
 
+            class Counter extends React.Component{
+                constructor(props){
+                    super(props);
+                    this.state ={
+                        count:0
+                    };
+                }
+
+                render(){
+                    return(
+                        <div>
+                            <h1>{this.state.count}</h1>
+                            <button onClick={this.increment}>Increment</button>
+                            
+                            <button onClick={this.decrement}>Decrement</button>
+                        </div>
+                    );
+                }
+                increment=()=>{
+                    
+                    this.setState(state=>({
+                        count: state.count + 1
+                    }));
+                }
+                decrement=()=>{
+                    this.setState(state=>({
+                        count: state.count -1
+                    }));
+                }
+
+
+            }    
 
           
             ReactDOM.render(<App/>,document.getElementById('app'));
