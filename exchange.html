@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <meta charset="UTF-8"/>
+        <title>Exchange</title>
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    </head>
+    <body>
+           
+        
+        <div id="app"></div>
+
+        <script type="text/babel" >
+            
+            
+            class App extends React.Component{
+                constructor(props){
+                    super(props);
+                    this.currencies=["AUD","CAD","CHF","CNY","INR","USD","EUR","GBP"];
+                    this.state={
+                        base:"USD",
+                        other:"EUR",
+                        value:0,
+                        converted:0
+                    }
+                }
+                render(){
+                    return(
+                        <div>
+                            
+                            <div>
+                                <select onChange={this.makeSelection} name="base" value={this.state.base}>
+                                    {this.currencies.map(currency=> <option key={currency} value={currency}>{currency}</option>)}
+                                </select>
+                                <input onChange={this.updateInput} value={this.state.value}/>
+                            </div>
+                            
+                            <div>
+                                <select  onChange={this.makeSelection} name="other" value={this.state.other}>
+                                        {this.currencies.map(currency=> <option key={currency} value={currency}>{currency}</option>)}
+                                </select>
+                                <input  disabled={true} value={this.state.converted} />
+                            </div>
+
+
+                        </div>
+                    );
+                }
+                recalculate=()=>{
+                    const value=parseFloat(this.state.value);
+                    if (isNaN(value)) {
+                        return;
+                    }
+
+                    fetch(`https://api.exchangeratesapi.io/latest?base=${this.state.base}`)
+                    .then(response=> response.json())
+                    .then(data=>{
+                        this.setState({
+                            converted: data.rates[this.state.other]*value
+                        });
+                        
+                    });
+                }
+                updateInput=(event)=>{
+                    this.setState({
+                        value:event.target.value
+                    },this.recalculate);
+
+                }
+                makeSelection=(event)=>{
+                    this.setState({
+                        [event.target.name]:event.target.value
+                    });
+                }
+            }
+
+          
+            ReactDOM.render(<App/>,document.getElementById('app'));
+        </script>
+        
+        
+    </body>
+</html>    
+
+
+
